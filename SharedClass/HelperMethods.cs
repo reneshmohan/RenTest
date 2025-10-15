@@ -1,205 +1,97 @@
-﻿using Newtonsoft.Json.Linq;
-using RestSharp;
-using Utility.Models;
+﻿using RestSharp;
+using System.Net;
+using System.Text.Json;
 
 namespace Utility
 {
     public class HelperMethods
     {
-        private const string baseUrl = "https://qacandidatetest.ensek.io";
-        private static string token = "";
+        // Stores the most recently retrieved access token
+        private string _accessToken = "";
 
-        public async static Task Login()
+        public string GetLoginDetails()
         {
-            // Create client (base URL)
-            var client = new RestClient(baseUrl);
+            var uri = "https://qacandidatetest.ensek.io/ENSEK/login";
+            var payload = "{\"username\": \"test\", \"password\": \"testing\"}";
 
-            var request = new RestRequest("ENSEK/login", Method.Post);  // defaults to GET
+            var options = new RestClientOptions(uri);
+            var client = new RestClient(options);
 
-            var loginObj = new
+            var request = new RestRequest("", Method.Post);
+            request.AddStringBody(payload, DataFormat.Json);
+
+            var response = client.Execute(request);
+
+            if (response == null)
             {
-                username = "test",
-                password = "testing"
-            };
+                Console.WriteLine("Response is null.");
+                return null;
+            }
 
-            // Add two form parameters (key/value)
-            request.AddJsonBody(loginObj);
-            request.AddHeader("Accept", "application/json");
+            Console.WriteLine($"Status Code: {response.StatusCode}");
+            Console.WriteLine($"Response: {response.Content}");
 
-            var response = await client.ExecuteAsync(request);
-
-            if (response.IsSuccessful)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                // Parse into a JObject
-                var obj = JObject.Parse(response.Content);
-                token = (string)obj["access_token"];
+                try
+                {
+                    using (JsonDocument doc = JsonDocument.Parse(response.Content))
+                    {
+                        if (doc.RootElement.TryGetProperty("access_token", out JsonElement tokenElement))
+                        {
+                            _accessToken = tokenElement.GetString();
+                            Console.WriteLine($"Access Token: {_accessToken}");
+                            return _accessToken;
+                        }
+                        else
+                        {
+                            Console.WriteLine("No 'access_token' property found in response.");
+                            return null;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error parsing JSON: " + ex.Message);
+                    return null;
+                }
             }
             else
             {
-                // Handle failure
-                Console.WriteLine($"Error: {response.StatusCode} {response.ErrorMessage}");
-                throw new Exception("Login failed");
+                Console.WriteLine($"Login failed: {response.StatusCode}");
+                return null;
             }
         }
 
-        public async static Task Reset()
-        {
+        public RestResponse ResetFirst(string _accessToken)
+        {            
+            var uri = "https://qacandidatetest.ensek.io/ENSEK/reset";
+                        
+            var options = new RestClientOptions(uri);
+            var client = new RestClient(options);
 
-            // Create client (base URL)
-            var client = new RestClient(baseUrl);
+            // Create a new POST request to the reset endpoint
+            var request = new RestRequest("", Method.Post);
 
-            var request = new RestRequest("ENSEK/reset", Method.Post);  // defaults to GET
+            // Add required HTTP headers
+            request.AddHeader("Accept", "application/json");                   
+            request.AddHeader("Authorization", $"Bearer {_accessToken}");       // Add bearer token for authentication
 
-            // Add the Bearer token in Authorization header
-            request.AddHeader("Authorization", $"Bearer {token}");
-
-            var response = await client.ExecuteAsync(request);
-
-            if (response.IsSuccessful)
+            var response = client.Execute(request);
+                        
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                // Handle success
-                Console.WriteLine("Response content: " + response.Content);
+                Console.WriteLine("Post Success");
             }
             else
-            {
-                // Handle failure
-                Console.WriteLine($"Error: {response.StatusCode} {response.ErrorMessage}");
+            {                
+                Console.WriteLine($"Post request failed: {response.StatusCode}");
+                Console.WriteLine(response.Content);
             }
-
-        }
-
-        public async static Task<Energy> GetEnergyData()
-        {
-            // Create client (base URL)
-            var client = new RestClient(baseUrl);
-
-            var request = new RestRequest("ENSEK/energy", Method.Get);  // defaults to GET
-
-            // Add the Bearer token in Authorization header
-            request.AddHeader("Authorization", $"Bearer {token}");
-
-            var response = await client.ExecuteAsync<Energy>(request);
-
-            if (response.IsSuccessful)
-            {
-                return response.Data;
-            }
-            else
-            {
-                // Handle failure
-                throw new Exception($"Error: {response.StatusCode} {response.ErrorMessage}");
-            }
-
-        }
-
-        public async static Task<Order[]> GetOrders()
-        {
-            // Create client (base URL)
-            var client = new RestClient(baseUrl);
-
-            var request = new RestRequest("ENSEK/orders", Method.Get);  // defaults to GET
-
-            // Add the Bearer token in Authorization header
-            request.AddHeader("Authorization", $"Bearer {token}");
-
-            var response = await client.ExecuteAsync<Order[]>(request);
-
-            if (response.IsSuccessful)
-            {
-                return response.Data;
-            }
-            else
-            {
-                // Handle failure
-                throw new Exception($"Error: {response.StatusCode} {response.ErrorMessage}");
-            }
-
-        }
-
-        public async static Task BuyQuantity(int id, int quantity)
-        {
-            var client = new RestClient(baseUrl);
-            var request = new RestRequest($"ENSEK/buy/{id}/{quantity}", Method.Put);  // defaults to GET
-
-            var response = await client.ExecuteAsync(request);
-
-            if (!response.IsSuccessful)
-            {
-                // Handle failure
-                Console.WriteLine($"Error: {response.StatusCode} {response.ErrorMessage}");
-                throw new Exception("Login failed");
-            }
-        }
-
-        public async static Task PlaceOrder(int id, int quantity, int energyId)
-        {
-            var client = new RestClient(baseUrl);
-            var request = new RestRequest($"ENSEK/buy/{id}/{quantity}", Method.Put);  // defaults to GET
-
-            var order = new
-            {
-                Id = id,
-                Quantity = quantity,
-                EnergyId = energyId
-            };
-
-            // Add two form parameters (key/value)
-            request.AddJsonBody(order);
-
-            var response = await client.ExecuteAsync(request);
-
-            if (!response.IsSuccessful)
-            {
-                // Handle failure
-                Console.WriteLine($"Error: {response.StatusCode} {response.ErrorMessage}");
-                throw new Exception("Login failed");
-            }
-        }
-
-        public async static Task<Order> GetOrder(string orderid)
-        {
-            // Create client (base URL)
-            var client = new RestClient(baseUrl);
-
-            var request = new RestRequest($"ENSEK/orders/{orderid}", Method.Get);  // defaults to GET
-
-            // Add the Bearer token in Authorization header
-            request.AddHeader("Authorization", $"Bearer {token}");
-
-            var response = await client.ExecuteAsync<Order>(request);
-
-            if (response.IsSuccessful)
-            {
-                return response.Data;
-            }
-            else
-            {
-                // Handle failure
-                throw new Exception($"Error: {response.StatusCode} {response.ErrorMessage}");
-            }
-        }
-
-        public async static Task DeleteOrder(string orderid)
-        {
-            // Create client (base URL)
-            var client = new RestClient(baseUrl);
-
-            var request = new RestRequest($"ENSEK/orders/{orderid}", Method.Delete);  // defaults to GET
-
-            // Add the Bearer token in Authorization header
-            request.AddHeader("Authorization", $"Bearer {token}");
-
-            var response = await client.ExecuteAsync(request);
-
-            if (response.IsSuccessful)
-            {
-                //return response.Data;
-            }
-            else
-            {
-                // Handle failure
-                throw new Exception($"Error: {response.StatusCode} {response.ErrorMessage}");
-            }
+                        
+            return response;
         }
     }
 }
+
+

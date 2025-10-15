@@ -1,0 +1,6 @@
+# Visual Studio cache folder
+.vs/
+
+# Build outputs
+bin/
+obj/

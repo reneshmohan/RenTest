@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Afv7sRozelE=",
+  "dgSpecHash": "ARdF4INfoJ0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Renesh\\source\\repos\\RenTest\\ClientTest\\ClientTest.csproj",
+  "projectFilePath": "C:\\Users\\Renesh\\Source\\Repos\\RenTest\\ClientTest\\ClientTest.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Renesh\\.nuget\\packages\\microsoft.codecoverage\\16.5.0\\microsoft.codecoverage.16.5.0.nupkg.sha512",
     "C:\\Users\\Renesh\\.nuget\\packages\\microsoft.csharp\\4.0.1\\microsoft.csharp.4.0.1.nupkg.sha512",

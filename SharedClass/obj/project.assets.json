@@ -2986,9 +2986,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Renesh\\source\\repos\\RenTest\\SharedClass\\Utility.csproj",
+      "projectUniqueName": "C:\\Users\\Renesh\\Source\\Repos\\RenTest\\SharedClass\\Utility.csproj",
       "projectName": "Utility",
-      "projectPath": "C:\\Users\\Renesh\\source\\repos\\RenTest\\SharedClass\\Utility.csproj",
+      "projectPath": "C:\\Users\\Renesh\\Source\\Repos\\RenTest\\SharedClass\\Utility.csproj",
       "packagesPath": "C:\\Users\\Renesh\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Renesh\\source\\repos\\RenTest\\SharedClass\\obj\\",
       "projectStyle": "PackageReference",

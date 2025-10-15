@@ -108,7 +108,6 @@ C:\Users\Renesh\Source\Repos\RenTest\ClientTest\bin\Debug\net8.0\NUnit3.TestAdap
 C:\Users\Renesh\Source\Repos\RenTest\ClientTest\bin\Debug\net8.0\NUnit3.TestAdapter.pdb
 C:\Users\Renesh\Source\Repos\RenTest\ClientTest\bin\Debug\net8.0\nunit.engine.dll
 C:\Users\Renesh\Source\Repos\RenTest\ClientTest\bin\Debug\net8.0\nunit.engine.api.dll
-C:\Users\Renesh\Source\Repos\RenTest\ClientTest\bin\Debug\net8.0\ClientTest.dll.config
 C:\Users\Renesh\Source\Repos\RenTest\ClientTest\bin\Debug\net8.0\ClientTest.deps.json
 C:\Users\Renesh\Source\Repos\RenTest\ClientTest\bin\Debug\net8.0\ClientTest.runtimeconfig.json
 C:\Users\Renesh\Source\Repos\RenTest\ClientTest\bin\Debug\net8.0\ClientTest.dll
@@ -210,3 +209,4 @@ C:\Users\Renesh\Source\Repos\RenTest\ClientTest\obj\Debug\net8.0\refint\ClientTe
 C:\Users\Renesh\Source\Repos\RenTest\ClientTest\obj\Debug\net8.0\ClientTest.pdb
 C:\Users\Renesh\Source\Repos\RenTest\ClientTest\obj\Debug\net8.0\ClientTest.genruntimeconfig.cache
 C:\Users\Renesh\Source\Repos\RenTest\ClientTest\obj\Debug\net8.0\ref\ClientTest.dll
+C:\Users\Renesh\Source\Repos\RenTest\ClientTest\obj\Debug\net8.0\ClientTest.sourcelink.json

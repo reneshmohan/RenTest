@@ -1,0 +1,12 @@
+# Ignore Visual Studio workspace data
+.vs/
+
+# Ignore build outputs
+bin/
+obj/
+
+# Ignore user-specific settings
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
